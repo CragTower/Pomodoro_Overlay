@@ -1,0 +1,12 @@
+{
+  "backgroundColor": {
+    "type": "colorpicker",
+    "label": "Box Background Color",
+    "value": "#3bb250"
+  },
+  "textColor": {
+    "type": "colorpicker",
+    "label": "Text Color",
+    "value": "#ffffff"
+  }
+}
