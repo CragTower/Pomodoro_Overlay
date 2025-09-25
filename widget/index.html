@@ -1,0 +1,52 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task List Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: transparent;
+      color: white;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+    }
+    .list {
+      padding: 15px;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+    .list h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #fff;
+      padding-bottom: 5px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      padding: 6px 0;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="list">
+      <h2>Chat Tasks</h2>
+      <ul id="chatTasks"></ul>
+    </div>
+    <div class="list">
+      <h2>Streamer Tasks</h2>
+      <ul id="streamerTasks"></ul>
+    </div>
+  </div>
+</body>
