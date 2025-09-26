@@ -57,33 +57,33 @@ window.addEventListener('onEventReceived', function (obj) {
 
 // Function to handle adding tasks to master list and updating HTML
 function handleAddTask(message) {
-    
+
     console.log('Loading task...');
     chatHistory.push(message);  // Adds chat instance to master list
     updateTaskList();           // Updates HTML
-    
+
 }
 
 // Function to handle removing tasks from master list
 // Broadcaster only allowed
 function handleRemoveTask(message) {
-    
+
     // Checks for authorized permission (broadcaster only)
     console.log('Authorizing removal...');
     if (message.isBroadcaster) {
-        
+
         // Collects reference # from chat message and set to 0 if no message
         const taskIndex = !isNaN(parseInt(message.message)) ? parseInt(message.message) : 0;
 
         // Checks if reference # is real 
         console.log('Initializing task removal...');
         if (taskIndex >= 0) {
-            
+
             // Finds reference # in master list and removes it
             console.log('Removing task...')
             const arrayIndex = chatHistory.findIndex(message => message.index === taskIndex);
             const removedTask = chatHistory.splice(arrayIndex, 1);
-            
+
             // Updates HTML lists
             updateTaskList();
             console.log(`Streamer removed task: ${removedTask}`);
@@ -93,7 +93,7 @@ function handleRemoveTask(message) {
 
 function handleCompletedTask(message) {
 
-    
+
     let savedMessage = chatHistory[message.message];
     let messageOwner = savedMessage.user;
 
@@ -106,15 +106,15 @@ function handleCompletedTask(message) {
 
 // Function to update the HTML lists list with edited master list
 function updateTaskList() {
-    
+
     // Links HTML elements to JS variables
     console.log('Updating list...');
     const broadcasterList = document.getElementById('streamerTasks');
     const chatList = document.getElementById('chatTasks');
-    
+
     // Checks if HTML/JS links were successful
     if (broadcasterList && chatList) {
-        
+
         // Clear both lists
         broadcasterList.innerHTML = '';
         chatList.innerHTML = '';

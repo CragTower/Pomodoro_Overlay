@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Task List Overlay</title>
-  <style>
+    <meta charset="UTF-8">
+    <title>Task List Overlay</title>
+    <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: transparent;
-      color: white;
+      font-family: {{textFont}};
+      //background: transparent;
+      color: {{backgroundColor}};
     }
     .container {
       display: flex;
@@ -23,7 +23,7 @@
     }
     .list h2 {
       margin-top: 0;
-      font-size: 1.2rem;
+      font-size: {{titleFontSize}}rem;
       border-bottom: 2px solid #fff;
       padding-bottom: 5px;
     }
@@ -34,19 +34,19 @@
     }
     li {
       padding: 6px 0;
-      font-size: 1rem;
+      font-size: {{listFontSize}}rem;
     }
-  </style>
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="list">
-      <h2>Chat Tasks</h2>
-      <ul id="chatTasks"></ul>
+    <div class="container">
+        <div class="list">
+            <h2 id="chatTitle">{{chatTitle}}</h2>
+            <ul id="chatTasks"></ul>
+        </div>
+        <div class="list">
+            <h2 id="streamerTitle">{{streamerTitle}}</h2>
+            <ul id="streamerTasks"></ul>
+        </div>
     </div>
-    <div class="list">
-      <h2>Streamer Tasks</h2>
-      <ul id="streamerTasks"></ul>
-    </div>
-  </div>
 </body>

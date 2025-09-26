@@ -7,6 +7,40 @@
   "textColor": {
     "type": "colorpicker",
     "label": "Text Color",
-    "value": "#ffffff"
+    "value": "#ffffff",
+    "group": "Custom Text Settings"
+  },
+  "chatTitle": {
+    "type": "text",
+    "label": "Title for Chat Tasks",
+    "group": "Custom Text Settings"
+  },
+  "streamerTitle": {
+    "type": "text",
+    "label": "Title for Chat Tasks",
+    "group": "Custom Text Settings"
+  },
+  "textFont": {
+    "type": "googleFont",
+    "label": "Font",
+    "group": "Custom Text Settings"
+  },
+  "titleFontSize": {
+    "type": "slider",
+    "label": "Title Font Size",
+    "value": 1.2,
+    "min": 0.5,
+    "max": 5,
+    "step": 0.1,
+    "group": "Custom Text Settings"
+  },
+  "listFontSize": {
+    "type": "slider",
+    "label": "List Font Size",
+    "value": 1,
+    "min": 0.5,
+    "max": 5,
+    "step": 0.1,
+    "group": "Custom Text Settings"
   }
 }
