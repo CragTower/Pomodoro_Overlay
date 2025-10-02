@@ -1,11 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family={{textFont}}:wght@400;700&display=swap');
+
+
 * {
     //font-family: 'Montserrat', sans-serif;
-    font-family: {{textFont}};
+    //font-family: {{textFont}};
     color: {{textColor}};
     font-size: 14px;
     overflow: hidden;
 }
 .list {
+    font-family: {{textFont}};
     background-color: {{backgroundColor}};
     color: {{textColor}};
 }

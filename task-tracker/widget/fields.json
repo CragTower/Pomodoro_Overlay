@@ -23,6 +23,7 @@
   "textFont": {
     "type": "googleFont",
     "label": "Font",
+    "value": "Roboto",
     "group": "Custom Text Settings"
   },
   "titleFontSize": {

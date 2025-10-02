@@ -174,8 +174,8 @@ function updateTaskList() {
         broadcasterTasks.innerHTML = '';
         viewerTasks.innerHTML = '';
 
+        // Get sorted lists for both broadcaster and viewers
         const [sortedBroadcasterList, sortedViewerList] = getSortedLists();
-        console.log(sortedBroadcasterList);
 
         let listNum = 1;
 
