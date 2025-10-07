@@ -18,8 +18,7 @@ const commands = {
     '!addtask': handleAddTask,
     '!removetask': handleRemoveTask,
     '!done': handleCompletedTask
-    //'!removeallchat': handleRemoveAllChat,
-    //'!removeallstreamer': handleRemoveAllStreamer
+    //'!removeUserTasks': handleRemoveUserTasks 
 }
 
 // Listens for events
@@ -71,19 +70,18 @@ function handleAddTask(message) {
 }
 
 // Function to handle removing tasks from master list
-// Broadcaster only allowed
 function handleRemoveTask(message) {
-
-    /*if (!message.isBroadcaster) {
-        console.log(`${message.user}, is not authorized to remove`);
-        return; 
-    }*/
 
     // Deletes the first task of the user on the list if user did not specify which
     if (!message.message) {
+
+        // Finds index of first user task occurence 
         const chatHistoryIndex = chatHistory.findIndex(m => m.user === message.user);
 
+        // Checks if search found a user's task
         if (chatHistoryIndex != -1) {
+
+            // Remove task from master list and update HTML
             const removedTask = chatHistory.splice(chatHistoryIndex, 1);
             updateTaskList();
             console.log(`Removed first found task for ${removedTask.user}`);
@@ -102,21 +100,20 @@ function handleRemoveTask(message) {
         return;
     }
 
-    // Splits broadcaster list and viewer list into temporary variables
-    const tempBroadcasterList = chatHistory.filter(m => m.isBroadcaster);
-    const tempViewerList = chatHistory.filter(m => !m.isBroadcaster);
+    // Get sorted broadcaster and viewer lists
+    const [sortedBroadcasterList, sortedViewerList] = getSortedLists();
 
     let taskToRemove = null;
 
-    // Finds the task in either the broadcaster or viewer list
-    if (mListNum <= tempBroadcasterList.length && message.isBroadcaster) {
-        taskToRemove = tempBroadcasterList[mListNum - 1];
+    // Finds the task in either the broadcaster or viewer HTML list
+    if (mListNum <= sortedBroadcasterList.length && message.isBroadcaster) {
+        taskToRemove = sortedBroadcasterList[mListNum - 1];
     }
-    else if (mListNum <= tempViewerList.length && !message.isBroadcaster) {
-        taskToRemove = tempViewerList[mListNum - 1];
+    else if (mListNum <= sortedViewerList.length && !message.isBroadcaster) {
+        taskToRemove = sortedViewerList[mListNum - 1];
     }
 
-    // Removes task from master list
+    // Removes task from master list and updates HTML
     if (taskToRemove) {
         const chatHistoryIndex = chatHistory.findIndex(m => m === taskToRemove);
         if (chatHistoryIndex != -1) {
@@ -129,32 +126,43 @@ function handleRemoveTask(message) {
     }
 }
 
+// Function to mark tasks completed in the master list
 function handleCompletedTask(message) {
 
-    // Parses List number from message and checks its validity
+    // Parses List number from chat message and checks its validity
     mListNum = parseInt(message.message.trim());
     if (isNaN(mListNum) || mListNum < 1) {
         console.log("Invalid list number");
         return;
     }
 
-    // Splits broadcaster list and viewer list into temporary variables
-    const tempBroadcasterList = chatHistory.filter(m => m.isBroadcaster);
-    const tempViewerList = chatHistory.filter(m => !m.isBroadcaster);
+    // Get sorted broadcaster and viewer lists
+    const [sortedBroadcasterList, sortedViewerList] = getSortedLists();
 
     let taskToComplete = null;
 
-    // Finds the task in either the broadcaster or viewer list
-    if (mListNum <= tempBroadcasterList.length && message.isBroadcaster) {
-        taskToComplete = tempBroadcasterList[mListNum - 1];
+    // Finds the task in either the broadcaster or viewer HTML list
+    if (mListNum <= sortedBroadcasterList.length && message.isBroadcaster) {
+        taskToComplete = sortedBroadcasterList[mListNum - 1];
         console.log(taskToComplete.message);
     }
-    else if (mListNum <= tempViewerList.length && !message.isBroadcaster) {
-        taskToComplete = tempViewerList[mListNum - 1];
+    else if (mListNum <= sortedViewerList.length && !message.isBroadcaster) {
+        taskToComplete = sortedViewerList[mListNum - 1];
     }
 
+    // Marks the task as complete and updates HTML
     if (taskToComplete && message.user === taskToComplete.user) {
         taskToComplete.isComplete = true;
+        updateTaskList();
+    }
+}
+
+// Function for broadcaster to remove all of a single user's tasks
+function handleRemoveUserTasks(message) {
+
+    // Check if broadcaster
+    if (message.isBroadcaster) {
+        chatHistory.filter(user => user !== message.message);
         updateTaskList();
     }
 }
@@ -174,56 +182,75 @@ function updateTaskList() {
         broadcasterTasks.innerHTML = '';
         viewerTasks.innerHTML = '';
 
-        // Get sorted lists for both broadcaster and viewers
+        // Get sorted broadcaster and viewer lists
         const [sortedBroadcasterList, sortedViewerList] = getSortedLists();
 
         let listNum = 1;
 
+        // Update HTML with new broadcaster list
         sortedBroadcasterList.forEach((task) => {
 
+            // Create list item
             const listItem = document.createElement('li');
             listItem.textContent = `${listNum}. ${task.message}`;
 
+            // If task is marked complete draw a line-through
             if (task.isComplete) {
                 listItem.style.textDecoration = 'line-through';
                 listItem.style.opacity = '0.6';
             }
 
+            // Add to HTML
             broadcasterTasks.appendChild(listItem);
             listNum++;
         });
 
         listNum = 1;
 
+        // Update HTML with new viewer list
         sortedViewerList.forEach((task) => {
 
+            // Create list item
             const listItem = document.createElement('li');
             listItem.textContent = `${listNum}. ${task.user} - ${task.message}`;
 
+            // If task is marked complete draw a line-through
             if (task.isComplete) {
                 listItem.style.textDecoration = 'line-through';
                 listItem.style.opacity = '0.6';
             }
 
+            // Add to HTML
             viewerTasks.appendChild(listItem);
             listNum++;
         });
     }
 }
 
+/*
+    This function sorts the master list into broadcaster and viewer
+    Both lists are then sorted by incomplete and complete tasks
+    This helps with the index search of the main list and still
+    keeping two separate HTML lists
+*/
 function getSortedLists() {
+
+    // Separate broadcaster and viewers into separate temp lists
     const tempBroadcasterList = chatHistory.filter(m => m.isBroadcaster);
     const tempViewerList = chatHistory.filter(m => !m.isBroadcaster);
 
+    // Sort broadcaster list by incomplete and complete tasks
     sortedBroadcasterList = [
         ...tempBroadcasterList.filter(m => !m.isComplete),
         ...tempBroadcasterList.filter(m => m.isComplete)
     ];
 
+    // Sort viewer list by incomplete and complete tasks
     sortedViewerList = [
         ...tempViewerList.filter(m => !m.isComplete),
         ...tempViewerList.filter(m => m.isComplete)
     ];
 
+    // Return coupled list of sorted lists
     return [sortedBroadcasterList, sortedViewerList];
 }
